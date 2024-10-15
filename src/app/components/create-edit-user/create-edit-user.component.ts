@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { User } from '../users.model';
 import { MatCard, MatCardActions, MatCardContent, MatCardTitle } from '@angular/material/card';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -23,8 +22,9 @@ import { MatInput } from '@angular/material/input';
   styleUrl: './create-edit-user.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CreateEditUserComponent {
-  public data: User = inject(MAT_DIALOG_DATA);
+export class CreateEditUserComponent implements OnInit {
+  public data: any = inject(MAT_DIALOG_DATA);
+  private readonly _dialogRef = inject(MatDialogRef<CreateEditUserComponent>);
   private readonly fb = inject(FormBuilder);
   public userForm!: FormGroup;
   public isEdit!: boolean;
@@ -38,6 +38,19 @@ export class CreateEditUserComponent {
       email: [this.data.email || '', [Validators.required, Validators.email]],
       phone: [this.data.phone || '', [Validators.required, Validators.pattern(/^(\+7|7|8)?\d{10}$/)]]
     });
-    this.userForm.patchValue(this.data);
+  }
+
+  ngOnInit() {
+    this.userForm.patchValue({...this.data});
+  }
+
+  public saveUser(): void {
+    if (this.userForm.valid) {
+      this._dialogRef.close(this.userForm.value);
+    }
+  }
+
+  public closeDialog(): void {
+    this._dialogRef.close();
   }
 }

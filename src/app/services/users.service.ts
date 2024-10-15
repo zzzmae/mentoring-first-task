@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { UsersApiService } from './users-api.service';
 import { User } from '../components/users.model';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, take } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -24,11 +24,11 @@ export class UsersService {
   }
 
   public addUser(newUser: User): void {
-    this._usersApiService.addUser(newUser).subscribe((addedUser: User) => {
-      this._usersSubject$.subscribe(currentUsers => {
-        const updatedUsers = [...currentUsers, newUser];
-        this._usersSubject$.next(updatedUsers);
-      });
-    });
+   this._usersApiService.addUser(newUser).subscribe((addedUser: User) => {
+     this._usersSubject$.pipe(take(1)).subscribe(currentUsers => {
+       const updatedUser = [...currentUsers, addedUser];
+       this._usersSubject$.next(updatedUser);
+     });
+   });
   }
 }

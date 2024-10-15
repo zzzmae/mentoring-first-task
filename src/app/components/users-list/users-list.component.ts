@@ -3,6 +3,7 @@ import { UsersService } from '../../services/users.service';
 import { AsyncPipe } from '@angular/common';
 import { UserCardComponent } from '../user-card/user-card.component';
 import { MatDialog } from '@angular/material/dialog';
+import { CreateEditUserComponent } from '../create-edit-user/create-edit-user.component';
 
 @Component({
   selector: 'app-users-list',
@@ -17,8 +18,8 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class UsersListComponent implements OnInit {
   private readonly _usersService = inject(UsersService);
-  public users$ = this._usersService.users$;
   private readonly dialog = inject(MatDialog);
+  public users$ = this._usersService.users$;
 
   public ngOnInit(): void {
     this._usersService.loadUsers();
@@ -29,15 +30,15 @@ export class UsersListComponent implements OnInit {
   }
 
   public openAddEditDialog(isEdit: boolean): void {
-    const dialogRef = this.dialog.open(UserCardComponent, {
+    const dialogRef = this.dialog.open(CreateEditUserComponent, {
       width: '40%',
       data: {
         isEdit: true,
       }
     });
-    this.dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe(result => {
       if(result) {
-
+        this._usersService.addUser(result);
       }
     })
   }
