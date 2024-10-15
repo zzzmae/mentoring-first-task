@@ -1,0 +1,12 @@
+<div class="container">
+  <div class="user-card">
+    <h1>ID: {{ user().id }}</h1>
+    <p>name: {{ user().name }}</p>
+    <p>username: {{ user().username }}</p>
+    <p>email: {{ user().email }}</p>
+    <p>phone: {{ user().phone }}</p>
+  </div>
+  <div class="user-button button">
+    <button (click)="removeUser(user().id)">Удалить</button>
+  </div>
+</div>

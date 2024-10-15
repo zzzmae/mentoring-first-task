@@ -1,0 +1,8 @@
+<div class="container">
+  <div>
+    <button>Добавить пользователя</button>
+  </div>
+  @for (users of users$ | async; track users.id) {
+    <app-user-card [user]="users" (onDeleteUser)="deleteUser($event)"></app-user-card>
+  }
+</div>
